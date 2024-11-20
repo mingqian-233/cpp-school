@@ -93,7 +93,7 @@ int Spirit::alivenumber = 0;
 int main() {
     cout << "Hello! Please choose the mode:\n";
     cout << "1. Test Mode:\n";
-    cout << "2. Game Mode:\n";
+    cout << "2. Extra Mode:\n";
     cout << "3. Exit\n";
     int mode;
     cin >> mode;
@@ -122,33 +122,43 @@ int main() {
         s2.setPosition(x2, y2);
         s2.getInfo();
 
+        system("pause");
+        system("cls");
+
         // task 2
+        cout << "Assume that s1 is attacked by 999 damage and 1 damage." << endl;
         s1.takeDamage(999);
         s1.getInfo();
         s1.takeDamage(1);
         s1.getInfo();
+        system("pause");
+        system("cls");
 
         // task 3
+        cout << "Test all the functions." << endl;
         cout << "Position of s1: (" << s1.getPositionX() << ", " << s1.getPositionY() << ")" << endl;
         cout << "Name of s1: " << s1.getName() << endl;
         cout << "Health of s1: " << s1.getHealth() << endl;
         cout << "Alive number: " << s1.getAliveNumber() << endl;
         cout << endl;
+        system("pause");
+        system("cls");
 
         // task 4
+        cout << "Randomly generate 10 spirits." << endl;
         Spirit spirits[10];
         for (int i = 0; i < 10; i++) {
-            string name;
-            cout << "Please enter the name of spirit " << i + 1 << ": ";
-            cin >> name;
-            int x, y;
-            cout << "Please enter the position of spirit " << i + 1 << ", separated by a space: ";
-            cin >> x >> y;
+            int x = get_rand_num(0, 200);
+            int y = get_rand_num(0, 200);
+            string name = "Spirit" + to_string(i);
             spirits[i] = Spirit(name, x, y);
             spirits[i].getInfo();
         }
+        system("pause");
+        system("cls");
 
         // task 5
+        cout << "Randomly attack 10 spirits and attack them." << endl;
         for (int i = 0; i < 10; i++) {
             int object = get_rand_num(0, 9);
             int damage = get_rand_num(0, 1000);
@@ -156,18 +166,34 @@ int main() {
         }
         s1.getInfo();
         s2.getInfo();
-        for (int i = 0; i < 10; i++) {
-            spirits[i].getInfo();
-        }
+        for (int i = 0; i < 10; i++) spirits[i].getInfo();
 
         cout << "Task finished." << '\n';
 
         system("pause");
-        system("clear");
+        system("cls");
+
+        cout << Spirit::number << ' ' << Spirit::alivenumber << '\n';  // 22 20
+        Spirit::number = 0;
+        Spirit::alivenumber = 0;
+        cout << Spirit::number << ' ' << Spirit::alivenumber << '\n';  // 0 0
+
+        system("pause");
+        system("cls");
+
         main();
     }
 
     if (mode == 2) {
+        // for (int i = 1; i <= 200; i++) cout << '*';
+        // the screen is big enough.
+        cout << "Please choose the mode: \n";
+        cout << "1. PvP Mode. \n";
+        cout << "2. PvE Mode. \n";
+        int mode;
+        cin >> mode;
+
+        vector<Spirit> spirits;
     }
 
     return 0;
