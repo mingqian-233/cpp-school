@@ -41,12 +41,12 @@ public:
                 aliveState = false;
                 alivenumber--;
                 cout << "Spirit is dead." << '\n';
-                return 0; // Dead
+                return 0;  // Dead
             }
             return 1;
         } else {
             cout << "Spirit has been dead. You can't attack a dead Spirit." << '\n';
-            return -1; // Error
+            return -1;  // Error
         }
     }
 
@@ -104,7 +104,7 @@ void Print_Rules(bool only_skill = false) {
         cout << "2. You can use your skill to attack the spirits on the map.\n";
         cout << "3. The spirits on the map will use their skill randomly.\n";
         cout << "4. The spirits will use their skill in the order of their id. If the previous spirit kills the after spirit, the after spirit will not use its skill.\n";
-        cout << "5. The game will end when all the other spirits on the map are dead.\n";
+        cout << "5. The game will end when you or all the other spirits on the map are dead.\n";
         cout << "6. If you are dead, you lose the game.\n";
         cout << '\n';
     }
@@ -200,10 +200,10 @@ void test_mode() {
     system("pause");
     system("cls");
 
-    cout << Spirit::number << ' ' << Spirit::alivenumber << '\n'; // 22 20
+    cout << Spirit::number << ' ' << Spirit::alivenumber << '\n';  // 22 20
     Spirit::number = 0;
     Spirit::alivenumber = 0;
-    cout << Spirit::number << ' ' << Spirit::alivenumber << '\n'; // 0 0
+    cout << Spirit::number << ' ' << Spirit::alivenumber << '\n';  // 0 0
 
     system("pause");
     system("cls");
@@ -218,7 +218,7 @@ void extra_mode() {
             break;
     }
     vector<vector<int>> mp(map_max_index + 1, vector<int>(map_max_index + 1, 0));
-    map<int, bool> alive; // the id of the spirit, its alive state
+    map<int, bool> alive;  // the id of the spirit, its alive state
     // 0: nothing n: the id of the spirit -1: player
     for (int i = 0; i <= map_max_index; i++) {
         for (int j = 0; j <= map_max_index; j++) {
@@ -327,10 +327,8 @@ void extra_mode() {
                 if (mp[spirits[i].getPositionX()][spirits[i].getPositionY()] == i) {
                     int damage = get_rand_num(0, map_max_index);
                     int alive = spirits[i].takeDamage(damage);
-                    if (alive == 0) {
+                    if (alive == 0)
                         mp[spirits[i].getPositionX()][spirits[i].getPositionY()] = 0;
-                        alive[i] = false;
-                    }
                 }
             }
         }
@@ -359,9 +357,8 @@ void extra_mode() {
             int x, y;
             cin >> x >> y;
             auto in_range = [&](auto r, pair<int, int> range) {
-                for (auto i : r) {
-                    if (!(i >= 0 && i <= map_max_index)) return false;
-                }
+                for (auto i : r)
+                    if (!(i >= range.first && i <= range.second)) return false;
                 return true;
             };
             if (in_range(vector<int>{x, y}, {0, map_max_index}) && mp[x][y] == 0) {
@@ -443,11 +440,10 @@ void extra_mode() {
                 }
             }
         }
-        if (alive[-1]) {
-            cout << "You win!" << '\n';
-        } else {
-            cout << "You lose!" << '\n';
-        }
+        if (player.getHealth() <= 0)
+            cout << "You lose\n";
+        else
+            cout << "You win.\n";
         system("pause");
         system("clr");
     }
