@@ -8,8 +8,7 @@ int main() {
     int power = 1;
     power *= x;
     i++;
-    if (x <= y) {
-    }
-    cout << power;
+    if (x <= y)
+        cout << power;
     return 0;
 }
