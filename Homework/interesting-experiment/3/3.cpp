@@ -4,7 +4,8 @@
  */
 using namespace std;
 
-void transfrom(const auto &a, auto &b) {
+auto transfrom(const auto &a, int mid_place) {
+    vector<vector<int>> b(3, vector<int>(3));
     b[0][0] = a[0];
     b[0][1] = a[1];
     b[0][2] = a[2];
@@ -13,6 +14,8 @@ void transfrom(const auto &a, auto &b) {
     b[2][1] = a[5];
     b[2][0] = a[6];
     b[1][0] = a[7];
+    b[1][1] = mid_place;
+    return b;
 }
 void print(const auto &v) {
     for (int i = 0; i < 3; i++) {
@@ -26,12 +29,15 @@ void print(const auto &v) {
             }
         }
         cout << '\n';
-        if (i != 2)
+        if (i == 0)
             cout << "|\\|/|" << '\n';
+        if (i == 1)
+            cout << "|/|\\|" << '\n';
     }
     cout << '\n';
+    system("pause");
 }
-void change(const auto &a, int t, int place_of_1) {
+void change(auto &a, int t, int ind) {
     // 第一个参数为一维序列，第二个为要被交换到中间的数字
     int swap_ind = 0;  // 在a中索引要被交换的数字的位置
     for (int i = 0; i < 8; i++) {
@@ -40,26 +46,37 @@ void change(const auto &a, int t, int place_of_1) {
             break;
         }
     }
+    a[swap_ind] = 0;  // 先把这个位置挖空
+    print(transfrom(a, t));
+    for (int i = swap_ind - 1;; i--) {
+        if (i == -1) i = 7;
+        swap(a[(i + 1) % 8], a[i]);
+        print(transfrom(a, t));
+        if (i == ind) break;
+    }
+    a[ind] = t;
+    print(transfrom(a, 0));
 }
 
-int generate(auto &a) {  // 返回假定顺时针，左上角为1开始，1在第几个位置
-    int one_place = 0;
-    a[1][1] = 0;
-    vector<int> v;
-    for (int i = 1; i <= 8; i++) v.push_back(i);
+int generate(auto &a) {  // 返回顺时针的情况下，左上角为第一个位置，1在第几个位置
+    for (int i = 1; i <= 8; i++) a.push_back(i);
     mt19937 g(random_device{}());
-    shuffle(v.begin(), v.end(), g);
+    shuffle(a.begin(), a.end(), g);
     for (int i = 0; i < 8; i++) {
-        if (v[i] == 1) return i;
+        if (a[i] == 1) return i;
     }
+    return -1;
 }
 void play() {
-    vector<int> a(8);
+    vector<int> a;
     int place_of_1 = generate(a);
+    cout << "The initial state:\n";
+    print(transfrom(a, 0));
     for (int move_num = 2; move_num <= 8; move_num++) {
         int ind = (place_of_1 + move_num - 1) % 8;  // 当前枚举到的数字原本应该处于的下标
-        if (a[ind] != move_num) change(a, move_num, place_of_1);
+        if (a[ind] != move_num) change(a, move_num, ind);
     }
+    cout << "Done!";
 }
 
 int main() {
