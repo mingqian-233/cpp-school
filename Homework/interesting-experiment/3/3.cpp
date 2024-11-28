@@ -35,7 +35,7 @@ void print(const auto &v) {
             cout << "|/|\\|" << '\n';
     }
     cout << '\n';
-    system("pause");
+    // system("pause");
 }
 void change(auto &a, int t, int ind) {
     // 第一个参数为一维序列，第二个为要被交换到中间的数字
