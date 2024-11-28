@@ -4,68 +4,23 @@
  */
 using namespace std;
 
-const vector<vector<int>> final_result[8] = {
-    {{1, 2, 3},
-     {8, 0, 4},
-     {7, 6, 5}},
-    {{8, 1, 2},
-     {7, 0, 3},
-     {6, 5, 4}},
-    {{7, 8, 1},
-     {6, 0, 2},
-     {5, 4, 3}},
-    {{2, 3, 4},
-     {1, 0, 5},
-     {8, 7, 6}},
-    {{6, 7, 8},
-     {5, 0, 1},
-     {4, 3, 2}},
-    {{3, 4, 5},
-     {2, 0, 6},
-     {1, 8, 7}},
-    {{4, 5, 6},
-     {3, 0, 7},
-     {2, 1, 8}},
-    {{5, 6, 7},
-     {4, 0, 8},
-     {3, 2, 1}},
-};
-
-void generate(auto &a, auto &ans) {
-    int one_place = 0;
-    a[1][1] = 0;
-    vector<int> v;
-    for (int i = 1; i <= 8; i++) v.push_back(i);
-    mt19937 g(random_device{}());
-    shuffle(v.begin(), v.end(), g);
-    int flag = 0;
-    for (int i = 0; i < 3; i++) {
-        for (int j = 0; j < 3; j++) {
-            if (i == 1 && j == 1) {
-                flag = 1;
-                continue;
-            }
-            a[i][j] = v[i * 3 + j - flag];
-            if (a[i][j] == 1) one_place = i * 3 + j - flag;
-        }
-    }
-    ans = final_result[one_place];
+void transfrom(const auto &a, auto &b) {
+    b[0][0] = a[0];
+    b[0][1] = a[1];
+    b[0][2] = a[2];
+    b[1][2] = a[3];
+    b[2][2] = a[4];
+    b[2][1] = a[5];
+    b[2][0] = a[6];
+    b[1][0] = a[7];
 }
-void output(const auto &a) {
-    /*
-    按照一个米字格的格式字符画输出
-    1-2-3
-    |\|/|
-    4-0-5
-    |/|\|
-    6-7-8
-     */
+void print(const auto &v) {
     for (int i = 0; i < 3; i++) {
         for (int j = 0; j < 3; j++) {
-            if (a[i][j] == 0)
+            if (v[i][j] == 0)
                 cout << "0";
             else
-                cout << a[i][j];
+                cout << v[i][j];
             if (j != 2) {
                 cout << "-";
             }
@@ -76,57 +31,35 @@ void output(const auto &a) {
     }
     cout << '\n';
 }
-
-#define pii pair<int, int>
-const int dx[] = {0, 0, 1, -1, 1, 1, -1, -1};
-const int dy[] = {1, -1, 0, 0, -1, 1, -1, 1};
-
-void bfs(vector<vector<int>> &a, const vector<vector<int>> &ans) {
-    map<vector<vector<int>>, bool> mp;
-    queue<pair<vector<vector<int>>, pii>> q;
-    queue<stack<vector<vector<int>>>> q2;
-    q.push({a, {1, 1}});
-    mp[a] = 1;
-
-    while (!q.empty()) {
-        auto [now, zero] = q.front();
-        q.pop();
-        auto st = q2.front();
-        q2.pop();
-
-        if (now == ans) {
-            while (!st.empty()) {
-                output(st.top());
-                st.pop();
-            }
-            return;
-        }
-
-        auto [zx, zy] = zero;
-        for (int i = 0; i < 8; i++) {
-            int x = zx + dx[i];
-            int y = zy + dy[i];
-            if (x >= 0 && x < 3 && y >= 0 && y < 3) {
-                swap(now[x][y], now[zx][zy]);
-                if (!mp[now]) {
-                    q.push({now, {x, y}});
-                    mp[now] = 1;
-                    st.push(now);
-                    q2.push(st);
-                }
-                swap(now[x][y], now[zx][zy]);
-            }
+void change(const auto &a, int t, int place_of_1) {
+    // 第一个参数为一维序列，第二个为要被交换到中间的数字
+    int swap_ind = 0;  // 在a中索引要被交换的数字的位置
+    for (int i = 0; i < 8; i++) {
+        if (a[i] == t) {
+            swap_ind = i;
+            break;
         }
     }
 }
 
+int generate(auto &a) {  // 返回假定顺时针，左上角为1开始，1在第几个位置
+    int one_place = 0;
+    a[1][1] = 0;
+    vector<int> v;
+    for (int i = 1; i <= 8; i++) v.push_back(i);
+    mt19937 g(random_device{}());
+    shuffle(v.begin(), v.end(), g);
+    for (int i = 0; i < 8; i++) {
+        if (v[i] == 1) return i;
+    }
+}
 void play() {
-    vector<vector<int>> a(3, vector<int>(3, 0)), ans = a;
-    // 输出a
-    generate(a, ans);
-    output(a);
-    // output(ans);
-    bfs(a, ans);
+    vector<int> a(8);
+    int place_of_1 = generate(a);
+    for (int move_num = 2; move_num <= 8; move_num++) {
+        int ind = (place_of_1 + move_num - 1) % 8;  // 当前枚举到的数字原本应该处于的下标
+        if (a[ind] != move_num) change(a, move_num, place_of_1);
+    }
 }
 
 int main() {

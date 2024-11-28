@@ -1,6 +1,6 @@
 #include <bits/stdc++.h>
 using namespace std;
-int sum(auto a) {
+int sum(const auto &a) {
     int ret = 0;
     for (const auto &i : a) {
         ret += i;

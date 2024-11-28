@@ -61,7 +61,7 @@ int main() {
     cout << "New game? (1/0): ";
     cin >> new_game;
     if (new_game) {
-        system("clear");
+        system("cls");
         main();
     } else {
         cout << "Goodbye!" << endl;
