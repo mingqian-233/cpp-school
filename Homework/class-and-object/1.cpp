@@ -8,7 +8,7 @@ int get_rand_num(int lower, int upper) {
     return dist(rd);
 }
 bool in_range(const auto &r, const pair<int, int> &range) {
-    for (auto i : r)
+    for (const auto &i : r)
         if (!(i >= range.first && i <= range.second)) return false;
     return true;
 }
@@ -115,12 +115,12 @@ void Print_Rules(bool only_skill = false) {
         cout << endl;
     }
     cout << "The skill of the spirits is as follows:\n";
-    cout << "1. Sweep Away(20%): The spirit will attack all the OTHER spirits with a random damage between 0 and 200.\n";
+    cout << "1. Sweep Away(15%): The spirit will attack all the OTHER spirits with a random damage between 0 and 200.\n";
     cout << "2. Odinary Attack(30%): The spirit will attack the player with a random range between 0 and 10 and a random damage between 0 and 100.\n";
-    cout << "3. New Born(10%): The spirit will create a new spirit on the map.\n";
+    cout << "3. New Born(5%): The spirit will create a new spirit on the map.\n";
     cout << "4. Move(30%): The spirit will move to a random place.\n";
-    cout << "5. Heal(10%): The spirit will heal itself with a random health between 0 and 1000.\n";
-    cout << "6. Cross Slash(10%): The spirit will all the OTHER spirits in the same line and column with a random damage between 0 and 1000.\n";
+    cout << "5. Heal(5%): The spirit will heal itself with a random health between 0 and 1000.\n";
+    cout << "6. Cross Slash(15%): The spirit will all the OTHER spirits in the same line and column with a random damage between 0 and 1000.\n";
     cout << "\n";
     cout << "The skill of the player is as follows:\n";
     cout << "1. Sweep Away: The player will attack all the OTHER spirits with a random damage between 0 and 200.\n";
@@ -233,11 +233,17 @@ void extra_mode() {
             break;
     }
     vector<vector<int>> mp(map_max_index + 1, vector<int>(map_max_index + 1, 0));
-    for (int i = 0; i <= map_max_index; i++) {
-        for (int j = 0; j <= map_max_index; j++) {
-            mp[i][j] = 0;
+
+    auto print_map = [&]() {
+        for (int i = 0; i <= map_max_index; i++) {
+            for (int j = 0; j <= map_max_index; j++) {
+                if (mp[i][j] == 0) cout << '#';
+                if (mp[i][j] > 0) cout << '*';
+                if (mp[i][j] == -1) cout << 'P';
+            }
+            cout << endl;
         }
-    }
+    };
 
     cout << "Please enter the name of your spirit: \n";
     string name;
@@ -247,6 +253,11 @@ void extra_mode() {
     int n = 0;
     while (1) {
         input(n);
+        if (n < 1 || n > 10) {
+            cout << "Invalid input.\n";
+            continue;
+        }
+        break;
     }
     system("cls");
     cout << "Randomly generate " << n << " spirits." << endl;
@@ -258,37 +269,34 @@ void extra_mode() {
             i--;
             continue;
         }
-        mp[x][y] = i;
-        string name = "Spirit" + to_string(i);
+        mp[x][y] = i + 1;
+        string name = "Spirit" + to_string(i + 1);
         spirits.push_back(Spirit(name, x, y));
         spirits[i].getInfo();
     }
     system("pause");
     system("cls");
     cout << "The map is as follows:" << endl;
-    for (int i = 0; i <= map_max_index; i++) {
-        for (int j = 0; j <= map_max_index; j++) {
-            if (mp[i][j] == 0) cout << '#';
-            if (mp[i][j] > 0) cout << '*';
-        }
-    }
+
+    print_map();
+
     cout << endl;
     cout << "Please decide the position of your spirit, separated by a space: \n";
     cout << "Remember, you can't place your spirit on the same position as the other spirits.\n";
     int x, y;
-    input(x), input(y);
+    while (1) {
+        input(x), input(y);
+        if (!in_range(vector<int>{x, y}, {0, map_max_index}) || mp[x][y]) {
+            cout << "Invalid position.\n";
+            continue;
+        }
+        break;
+    }
     mp[x][y] = -1;
     Spirit player(name, x, y);
     system("cls");
     cout << "The map is as follows:" << endl;
-    for (int i = 0; i <= map_max_index; i++) {
-        for (int j = 0; j <= map_max_index; j++) {
-            if (mp[i][j] == 0) cout << '#';
-            if (mp[i][j] > 0) cout << '*';
-            if (mp[i][j] == -1) cout << 'P';
-        }
-    }
-    cout << endl;
+    print_map();
     cout << "Your spirit has been placed on the map." << endl;
     system("pause");
     system("cls");
@@ -302,14 +310,7 @@ void extra_mode() {
         for (int i = 0; i < n; i++)
             spirits[i].getInfo();
         cout << "The map:" << endl;
-        for (int i = 0; i <= map_max_index; i++) {
-            for (int j = 0; j <= map_max_index; j++) {
-                if (mp[i][j] == 0) cout << '#';
-                if (mp[i][j] > 0) cout << '*';
-                if (mp[i][j] == -1) cout << 'P';
-            }
-        }
-        cout << endl;
+        print_map();
         system("pause");
 
         cout << "Please choose your action: \n";
@@ -344,14 +345,14 @@ void extra_mode() {
         }
         if (skill == 2) {
             cout << "You use The Death is Coming." << endl;
-        front:
+
             int object = get_rand_num(0, n - 1);
-            if (mp[spirits[object].getPositionX()][spirits[object].getPositionY()] == object) {
-                int alive = spirits[object].takeDamage(INT_MAX);
-                if (alive == 0)
-                    mp[spirits[object].getPositionX()][spirits[object].getPositionY()] = 0;
-            } else
-                goto front;
+            while (mp[spirits[object].getPositionX()][spirits[object].getPositionY()] != object + 1) {
+                object = get_rand_num(0, n - 1);
+            }
+            int alive = spirits[object].takeDamage(INT_MAX);
+            if (alive == 0)
+                mp[spirits[object].getPositionX()][spirits[object].getPositionY()] = 0;
         }
         if (skill == 3) {
             cout << "You use Heal." << endl;
@@ -361,7 +362,7 @@ void extra_mode() {
         if (skill == 4) {
             cout << "You use Cross Slash." << endl;
             for (int i = 0; i < n; i++) {
-                if (mp[spirits[i].getPositionX()][spirits[i].getPositionY()] == i) {
+                if (mp[spirits[i].getPositionX()][spirits[i].getPositionY()] == i + 1) {
                     int alive = spirits[i].takeDamage(500);
                     if (alive == 0)
                         mp[spirits[i].getPositionX()][spirits[i].getPositionY()] = 0;
@@ -370,9 +371,8 @@ void extra_mode() {
         }
         if (skill == 5) {
             cout << "You use Move." << endl;
+            cout << "Please input 2 numbers, seperated by a space:";
             int x, y;
-            input(x), input(y);
-
             while (true) {
                 input(x), input(y);
                 if (in_range(vector<int>{x, y}, {0, map_max_index}) && mp[x][y] == 0) {
@@ -387,26 +387,29 @@ void extra_mode() {
         }
 
         cout << "Now the map is as follows:" << endl;
-        for (int i = 0; i <= map_max_index; i++) {
-            for (int j = 0; j <= map_max_index; j++) {
-                if (mp[i][j] == 0) cout << '#';
-                if (mp[i][j] > 0) cout << '*';
-                if (mp[i][j] == -1) cout << 'P';
-            }
-        }
-        cout << endl;
+        print_map();
         system("pause");
         system("cls");
 
         cout << "The spirits use their skill." << endl;
 
         for (int i = 0; i < n; i++) {
-            if (mp[spirits[i].getPositionX()][spirits[i].getPositionY()] != i) continue;
-            int skill = get_rand_num(1, 6);
+            if (mp[spirits[i].getPositionX()][spirits[i].getPositionY()] != i + 1) continue;
+            auto get_skill = [&]() {
+                int rand_num = get_rand_num(1, 100);
+                if (rand_num <= 15) return 1;  // Sweep Away
+                if (rand_num <= 45) return 2;  // Odinary Attack
+                if (rand_num <= 50) return 3;  // New Born
+                if (rand_num <= 80) return 4;  // Move
+                if (rand_num <= 85) return 5;  // Heal
+                return 6;  // Cross Slash
+            };
+
+            int skill = get_skill();
             if (skill == 1) {
                 cout << "Spirit " << spirits[i].getName() << " uses Sweep Away." << endl;
                 for (int j = 0; j < n; j++) {
-                    if (j != i && mp[spirits[j].getPositionX()][spirits[j].getPositionY()] == j) {
+                    if (j != i && mp[spirits[j].getPositionX()][spirits[j].getPositionY()] == j + 1) {
                         int damage = get_rand_num(0, map_max_index);
                         int alive = spirits[j].takeDamage(damage);
                         if (alive == 0)
@@ -433,8 +436,8 @@ void extra_mode() {
                 int x = get_rand_num(0, map_max_index);
                 int y = get_rand_num(0, map_max_index);
                 if (mp[x][y] == 0) {
-                    mp[x][y] = n;
-                    string name = "Spirit" + to_string(n);
+                    mp[x][y] = n + 1;
+                    string name = "Spirit" + to_string(n + 1);
                     spirits.push_back(Spirit(name, x, y));
                     spirits[n].getInfo();
                     n++;
@@ -447,10 +450,10 @@ void extra_mode() {
                 int x = get_rand_num(0, map_max_index);
                 int y = get_rand_num(0, map_max_index);
                 if (mp[x][y] == 0) {
-                    mp[x][y] = i;
+                    mp[x][y] = i + 1;
                     spirits[i].setPosition(x, y);
                 } else {
-                    goto front;
+                    mp[spirits[i].getPositionX()][spirits[i].getPositionY()] = i + 1;
                 }
             }
             if (skill == 5) {
@@ -471,13 +474,15 @@ void extra_mode() {
                 }
             }
         }
-        if (player.getHealth() <= 0)
-            cout << "You lose\n";
-        else
-            cout << "You win.\n";
-        system("pause");
-        system("cls");
+        cout << "The map is as follows:" << endl;
+        print_map();
     }
+    if (player.getHealth() <= 0)
+        cout << "You lose\n";
+    else
+        cout << "You win.\n";
+    system("pause");
+    system("cls");
 }
 int main() {
     cout << "Hello! Please choose the mode:\n";
