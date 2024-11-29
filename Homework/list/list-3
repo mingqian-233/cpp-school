@@ -1,0 +1,14 @@
+#include <iostream>
+using namespace std;
+
+struct node {
+    int val;
+    node *prev, *nxt;
+    node(int x) : val(x), prev(NULL), nxt(NULL) {}
+    node(int x, node* prev, node* nxt) : val(x), prev(prev), nxt(nxt) {}
+    node* make_link() {
+    }
+};
+int main() {
+    return 0;
+}
