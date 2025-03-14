@@ -190,6 +190,8 @@ bool Wall(int pos)
 
 void TurnRight(Direction& heading)
 {
+	heading=(Direction)(heading+1)%4;
+	
 	//to be finished.
 }
 
@@ -213,5 +215,6 @@ void WheresAhead(int pos, Direction heading, int& ahead)
 
 void TurnLeft(Direction& heading)
 {
+	heading=(Direction)(heading+3)%4;
 	//to be finished.
 }
