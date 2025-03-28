@@ -1,6 +1,6 @@
 # 第二次实验报告
 
-source code:[github](https://github.com/mingqian-233/cpp-school/)
+source code:[github](https://github.com/mingqian-233/cpp-school/tree/main/semester2/code/Assignment2)
 
 ## 题目分析
 
