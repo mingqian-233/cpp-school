@@ -1,0 +1,8 @@
+3
+A123 Object-Oriented-Programming Dave Smith 2009 3
+A251 UML-Modelling-and-Design Barry Arthurs 2005 1
+Z001 Practical-Guide-to-STL John Johnson 2000 5
+3 
+12345 Joe Bloggs 6 N123 A251 Z001 A123 A123 A123
+20498 Alex Alexis 1 Z001
+19090 Mike Mike 2 N123 Z001

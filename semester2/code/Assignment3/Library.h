@@ -1,44 +1,40 @@
 #ifndef LIBRARY_H
 #define LIBRARY_H
 
-#include <iostream>
-#include <vector>
-#include <string>
-#include <stdexcept>
 #include <algorithm>
+#include <iostream>
+#include <stdexcept>
+#include <string>
+#include <vector>
+
 
 class BookRecord {
 private:
-    std::string book_id,book_title,name;
+    std::string book_id, book_title, name;
     int year_published;
     int numberOfCopies;
     int availableCopies;
 
 public:
-    // Constructor
     BookRecord(const std::string& id, const std::string& title, const std::string& author, int year, int totalCopies, int availableCopies);
 
-    // Destructor
     ~BookRecord() = default;
 
-    // Getters
     std::string getBookID() const;
 
-    // Display function
     void display() const;
 };
 
 class Borrower {
 private:
-    std::string borrowerID;
-    std::string firstName;
-    std::string lastName;
+    int borrowerID;
+    std::string borrowerName;
     int borrowedBooksCount;
     std::vector<std::string> borrowedBookIDs;
 
 public:
     // Constructor
-    Borrower(const std::string& id, const std::string& firstName, const std::string& lastName, int borrowedCount);
+    Borrower(int id, const std::string& borrowerName, int borrowedCount, const std::vector<std::string>& borrowedBookIDs);
 
     // Destructor
     ~Borrower() = default;
@@ -51,6 +47,7 @@ class Catalogue {
 private:
     int totalBookRecords;
     std::vector<BookRecord> bookRecords;
+
 public:
     // Constructor
     Catalogue(const std::vector<BookRecord>& records);
@@ -77,10 +74,8 @@ public:
     ~Library() = default;
 
     // Display functions
-    void displayBorrowedBooks() const;
-    void displayBorrowers() const;
-    void inputInitialState(int choice);
-    void inputBorrowerInfo(int choice);
-};
+    void display() const;
+    void input(int choice = 1);
 
+};
 #endif
