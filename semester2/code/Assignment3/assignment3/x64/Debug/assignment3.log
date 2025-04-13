@@ -1,0 +1,6 @@
+﻿  Library.cpp
+D:\Users\tomfa\Documents\code\cpp-school\semester2\code\Assignment3\Library.cpp(1,1): warning C4819: 该文件包含不能在当前代码页(936)中表示的字符。请将该文件保存为 Unicode 格式以防止数据丢失
+D:\Users\tomfa\Documents\code\cpp-school\semester2\code\Assignment3\Library.cpp(66,45): warning C4267: “初始化”: 从“size_t”转换到“int”，可能丢失数据
+  Main.cpp
+  正在生成代码...
+  assignment3.vcxproj -> D:\Users\tomfa\Documents\code\cpp-school\semester2\code\Assignment3\x64\Debug\assignment3.exe

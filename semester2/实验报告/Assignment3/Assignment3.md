@@ -114,11 +114,11 @@ void handleInputError(std::istream& inputStream, const std::string& errorMessage
 }
 ```
 
-然而当们仔细看题目的时候，发现：
+然而当仔细看题目的时候，发现：
 
 > <span style="color:red;">Besides the two input data, the program should not depend on any input from the user when it runs.</span>
 
-虽然这说明们上面的工作有一半是无效的，但至少们的程序提供了多样化的接口，在重用性上也有很大的提升。
+虽然这说明上面的工作有一半是无效的，但至少程序提供了多样化的接口，在重用性上也有很大的提升。
 修改也很容易，不要读入 choice，默认 choice=1，并且不读入文件名，默认文件名为 `book.txt`。这样就可以满足题目的要求了。
 
 ### 输出数据
@@ -259,7 +259,7 @@ terminate called after throwing an instance of 'std::invalid_argument'
   what():  Error: Number of borrowed books must be less than or equal to 5
 ```
 
-以上，可证明我们的程序基本符合题意要求。
+以上，可证明程序基本符合题意要求。
 
 ## 实验总结
 
